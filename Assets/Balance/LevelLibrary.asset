@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f94b39cb5625f2498cace9e778e4893, type: 3}
+  m_Name: LevelLibrary
+  m_EditorClassIdentifier: 
+  library:
+  - asteroidNum: 3
+    asteroidScore: 640000004b00000032000000
+  - asteroidNum: 4
+    asteroidScore: 96000000640000004b000000

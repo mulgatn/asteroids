@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] float _maxVelocity;
 	[SerializeField] float _rotationSpeed;
 	[SerializeField] float _fireRate;
+	[SerializeField] float _invincibleDuration;
 
 
 	[Header("Shooting")]
@@ -16,20 +17,32 @@ public class PlayerController : MonoBehaviour
 	public ObjectPool BulletPool => _bulletPool;
 
 	Rigidbody2D _body;
+	SpriteRenderer _renderer;
 
 	bool _accelerating;
 
 	float _fireTimer;
+	float _invincibleTimer;
+
+	bool IsInvincible => _invincibleTimer < _invincibleDuration;
 
 	void Start()
 	{
 		_body = GetComponent<Rigidbody2D>();
-		_fireTimer = 0f;
+		_renderer = GetComponent<SpriteRenderer>();
 		_bulletPool.Init(_bulletPrefab);
+		Respawn();
 	}
 
 	void Update()
 	{
+		if (_invincibleTimer < _invincibleDuration)
+		{
+			_invincibleTimer += Time.deltaTime;
+			if (_invincibleTimer >= _invincibleDuration)
+                _renderer.color = Color.white;
+        }
+
 		_accelerating = Input.GetKey(KeyCode.UpArrow);
 		HandleRotation();
 
@@ -37,6 +50,15 @@ public class PlayerController : MonoBehaviour
 			Fire();
 
 		_fireTimer += Time.deltaTime;
+	}
+
+	void FixedUpdate()
+	{
+		if (_accelerating)
+		{
+			_body.AddForce(_acceleration * transform.up);
+			_body.velocity = Vector2.ClampMagnitude(_body.velocity, _maxVelocity);
+		}    
 	}
 
 	void Fire()
@@ -49,15 +71,6 @@ public class PlayerController : MonoBehaviour
 		_fireTimer = 0;
 	}
 
-	void FixedUpdate()
-	{
-		if (_accelerating)
-		{
-			_body.AddForce(_acceleration * transform.up);
-			_body.velocity = Vector2.ClampMagnitude(_body.velocity, _maxVelocity);
-		}    
-	}
-
 	void HandleRotation()
 	{
 		var rotationMultiplier = Input.GetKey(KeyCode.LeftArrow) ? 1f :
@@ -65,4 +78,26 @@ public class PlayerController : MonoBehaviour
 
 		transform.Rotate(_rotationSpeed * Time.deltaTime * transform.forward * rotationMultiplier);
 	}
+
+	public void Respawn()
+	{
+        _fireTimer = 0f;
+		_invincibleTimer = 0;
+		_body.velocity = Vector2.zero;
+		transform.position = Vector2.zero;
+		_renderer.color = new Color(_renderer.color.r, _renderer.color.g, _renderer.color.b, .5f);
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+		if (IsInvincible)
+			return;
+
+        if (collision.GetComponent<Asteroid>())
+		{
+            var levelManager = FindAnyObjectByType<LevelManager>();
+
+			levelManager.PlayerDeath(this);
+        }
+    }
 }

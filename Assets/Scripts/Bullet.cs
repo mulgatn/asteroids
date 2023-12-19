@@ -39,7 +39,7 @@ public class Bullet : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (collision.gameObject.TryGetComponent(out Asteroid asteroid))
+		if (collision.TryGetComponent(out Asteroid asteroid))
 		{
 			var levelManager = FindAnyObjectByType<LevelManager>();
 

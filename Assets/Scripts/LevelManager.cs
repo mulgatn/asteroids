@@ -3,6 +3,7 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
 	[SerializeField] LevelLibrary _levelLibrary;
+
 	[SerializeField] ObjectPool _asteroidPool;
 	[SerializeField] GameObject _asteroidPrefab;
 
@@ -10,14 +11,18 @@ public class LevelManager : MonoBehaviour
 
 	int _currentLevel = 0;
 
-	public int _score = 0;
+	int _score;
+	int _lives;
 
 	void Start()
 	{
 		_asteroidPool.Init(_asteroidPrefab);
 		StartLevel(_currentLevel);
+		_score = 0;
+		_lives = 3;
         _playerUI.SetScoreText(_score);
-    }
+		_playerUI.SetLivesText(_lives);
+	}
 
 	void StartLevel(int level)
 	{
@@ -78,5 +83,19 @@ public class LevelManager : MonoBehaviour
         var asteroid = _asteroidPool.RequestObject().GetComponent<Asteroid>();
        
         asteroid.Init(size, pos);
+    }
+
+	public void PlayerDeath(PlayerController player)
+	{
+		_lives--;
+        _playerUI.SetLivesText(_lives);
+		if (_lives == 0)
+		{
+			//Game Over
+		}
+		else
+		{
+            player.Respawn();
+		}
     }
 }

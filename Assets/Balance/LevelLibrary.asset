@@ -17,3 +17,5 @@ MonoBehaviour:
     asteroidScore: 640000004b00000032000000
   - asteroidNum: 4
     asteroidScore: 96000000640000004b000000
+  - asteroidNum: 5
+    asteroidScore: af0000007d00000064000000

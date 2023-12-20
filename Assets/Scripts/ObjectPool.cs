@@ -28,8 +28,8 @@ public class ObjectPool : MonoBehaviour
 		{
 			var newObject = Instantiate(_prefab);
 			newObject.transform.parent = transform;
-            _activeObjects.Add(newObject);
-            return newObject;
+			_activeObjects.Add(newObject);
+			return newObject;
 		}
 	}
 

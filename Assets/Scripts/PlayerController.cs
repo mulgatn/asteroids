@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour
 	[SerializeField] float _fireRate;
 	[SerializeField] float _invincibleDuration;
 
-
 	[Header("Shooting")]
 	[SerializeField] GameObject _bulletPrefab;
 	[SerializeField] GameObject _bulletSpawn;
@@ -40,8 +39,8 @@ public class PlayerController : MonoBehaviour
 		{
 			_invincibleTimer += Time.deltaTime;
 			if (_invincibleTimer >= _invincibleDuration)
-                _renderer.color = Color.white;
-        }
+				_renderer.color = Color.white;
+		}
 
 		_accelerating = Input.GetKey(KeyCode.UpArrow);
 		HandleRotation();
@@ -58,12 +57,12 @@ public class PlayerController : MonoBehaviour
 		{
 			_body.AddForce(_acceleration * transform.up);
 			_body.velocity = Vector2.ClampMagnitude(_body.velocity, _maxVelocity);
-		}    
+		}
 	}
 
 	void Fire()
 	{
-		var bullet = _bulletPool.RequestObject().GetComponent<Bullet>();
+		var bullet    = _bulletPool.RequestObject().GetComponent<Bullet>();
 		var shipSpeed = Mathf.Clamp(Vector2.Dot(_body.velocity, transform.up), 0f, _body.velocity.magnitude);
 
 		bullet.Init(_bulletPool, _bulletSpawn.transform.position, transform.up, shipSpeed);
@@ -81,23 +80,23 @@ public class PlayerController : MonoBehaviour
 
 	public void Respawn()
 	{
-        _fireTimer = 0f;
-		_invincibleTimer = 0;
-		_body.velocity = Vector2.zero;
+		_fireTimer         = 0f;
+		_invincibleTimer   = 0;
+		_body.velocity     = Vector2.zero;
 		transform.position = Vector2.zero;
-		_renderer.color = new Color(_renderer.color.r, _renderer.color.g, _renderer.color.b, .5f);
-    }
+		_renderer.color    = new(_renderer.color.r, _renderer.color.g, _renderer.color.b, .5f);
+	}
 
-    void OnTriggerEnter2D(Collider2D collision)
-    {
+	void OnTriggerEnter2D(Collider2D collision)
+	{
 		if (IsInvincible)
 			return;
 
-        if (collision.GetComponent<Asteroid>())
+		if (collision.GetComponent<Asteroid>())
 		{
-            var levelManager = FindAnyObjectByType<LevelManager>();
+			var levelManager = FindAnyObjectByType<LevelManager>();
 
 			levelManager.PlayerDeath(this);
-        }
-    }
+		}
+	}
 }
